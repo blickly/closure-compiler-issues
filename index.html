@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Closure Compiler Issues</title>
+    <script type="text/javascript" src="closureIssues.jsonp"></script>
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+function getIssue(issueList, issueNo) {
+  console.log("getting issue: " + issueNo);
+  for (var i = 0; i <  issueList.length; i++) {
+    if (issueList[i].id === issueNo) {
+      return issueList[i];
+    }
+  }
+  return null;
+}
+function createTextElement(kind, content) {
+  var elem = document.createElement(kind);
+  elem.appendChild(document.createTextNode(content));
+  return elem;
+}
+function showIssue(issue) {
+  if (issue === null) return;
+  document.body.appendChild(createTextElement('h1', issue.title));
+  for (var i = 0; i < issue.comments.items.length; i++) {
+    var comment = issue.comments.items[i];
+    var div = document.createElement('div');
+    div.appendChild(createTextElement(
+          'h3', comment.author.name + '@' + comment.published));
+    div.appendChild(createTextElement('pre', comment.content));
+    div.appendChild(document.createElement('br'));
+    document.body.appendChild(div);
+  }
+}
+function hashChanged() {
+  document.body.innerHTML="";
+  var issueNo = +window.location.hash.slice(1);
+  var issueJson = getIssue(issues.items, issueNo);
+  showIssue(issueJson);
+}
+window.onhashchange = hashChanged;
+hashChanged();
+    </script>
+  </body>
+</html>
